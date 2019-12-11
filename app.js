@@ -1,14 +1,17 @@
 const canvas = document.getElementById("jsCanvas");
 const colors = document.getElementsByClassName("jsColor");
 const controls = document.getElementById("jsControls");
-const mode = document.getElementById("jsMode");
 const range = document.getElementById("jsRange");
+const mode = document.getElementById("jsMode");
+const save = document.getElementById("jsSave");
 
 const ctx = canvas.getContext("2d");
 
 const INITIAL_STYLE = "#2d3436";
 
 ctx.lineWidth = 2.5;
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 ctx.strokeStyle = INITIAL_STYLE;
 ctx.fillStyle = INITIAL_STYLE;
 
@@ -62,12 +65,25 @@ const handleFilling = () => {
   }
 };
 
+const handleContextMenu = event => {
+  event.preventDefault();
+};
+
+const handleSave = () => {
+  const image = canvas.toDataURL();
+  const link = document.createElement("a");
+  link.href = image;
+  link.download = "My Drawing 🖌";
+  link.click();
+};
+
 const canvasInit = () => {
   canvas.addEventListener("mousemove", onMouseMove);
   canvas.addEventListener("mousedown", startPainting);
   canvas.addEventListener("mouseup", stopPainting);
   canvas.addEventListener("mouseleave", stopPainting);
   canvas.addEventListener("click", handleFilling);
+  canvas.addEventListener("contextmenu", handleContextMenu);
 };
 
 const controlsInit = () => {
@@ -76,6 +92,7 @@ const controlsInit = () => {
   Array.from(colors, color =>
     color.addEventListener("click", handleClickedColor)
   );
+  save.addEventListener("click", handleSave);
 };
 
 if (canvas) {
